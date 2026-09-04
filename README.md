@@ -91,6 +91,25 @@ Detailed logic for each agent lives in `docs/`:
 
 ---
 
+## Roadmap: AI-Judgment Integration (Built, Not Yet Activated)
+
+Every decision in the current pipeline is deterministic rule logic - correct for anything with a clear, checkable answer (matching, tolerance checks, duplicate detection). The one case that's genuinely open-ended is `genuine_unresolved_anomaly`: an amount discrepancy with no rule-based explanation.
+
+For exactly this case, `agents/ai_investigator.py` is a complete, working integration with the Claude API: it would generate a specific, evidence-based investigative hypothesis from the transaction's actual numbers, instead of a generic "requires manual investigation" placeholder.
+
+**Current state:** the integration is fully built and wired into the Exception Investigator, but not active in this build - no API key is configured, since this is a student project without a budget for paid API usage during development. It degrades gracefully to a clear fallback message with zero setup required; the rest of the pipeline is completely unaffected.
+
+**To activate in a production deployment:**
+```bash
+pip3 install anthropic --break-system-packages
+export ANTHROPIC_API_KEY=your_key_here
+```
+No code changes needed - it activates automatically once a key is present.
+
+This is a deliberate scope choice, not an oversight: the design keeps AI narrowly scoped to the one case where rules genuinely run out, rather than using it as a blanket buzzword layer over what is otherwise correctly deterministic logic.
+
+---
+
 ## Known Limitations
 
 These are disclosed, intentional scope decisions for this build &mdash; not oversights. A production deployment would need to address these before handling real financial data:

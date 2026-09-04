@@ -6,3 +6,9 @@
 langgraph>=0.2.0
 langchain-core>=0.3.0
 pandas>=2.0.0
+
+# Optional - only needed for AI-generated investigation hypotheses on
+# genuinely unexplained anomalies (agents/ai_investigator.py). The
+# pipeline works fully without this; it just falls back to a plain
+# message for that one specific case.
+anthropic>=0.40.0

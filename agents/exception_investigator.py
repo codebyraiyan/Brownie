@@ -29,6 +29,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from reconciliation_agent import reconcile, build_flagged_exceptions_payload
 from audit_log import log_decision
+from ai_investigator import generate_ai_hypothesis
 
 
 # --- Root cause categories and their gating rule (per exception-investigator.md) ---
@@ -53,6 +54,7 @@ class InvestigationState(TypedDict):
     proposed_action: str
     investigation_status: str
     provisional_cash_status: str
+    ai_hypothesis: Optional[str]
 
 
 def classify_exception(exception: dict) -> dict:
@@ -135,7 +137,15 @@ def auto_resolve_node(state: InvestigationState) -> InvestigationState:
 
 def escalate_direct_node(state: InvestigationState) -> InvestigationState:
     status = "escalated"
-    return {**state, "investigation_status": status,
+    ai_hypothesis = None
+
+    # This is exactly the case rules can't handle: a genuine unexplained
+    # anomaly. Ask Claude for a real investigative hypothesis instead of
+    # just a canned "requires manual investigation" string.
+    if state["root_cause"] == "genuine_unresolved_anomaly":
+        ai_hypothesis = generate_ai_hypothesis(state["exception"])
+
+    return {**state, "investigation_status": status, "ai_hypothesis": ai_hypothesis,
             "provisional_cash_status": get_provisional_cash_status(state["root_cause"], status)}
 
 
@@ -228,7 +238,8 @@ def investigate_all(flagged_exceptions: List[dict], auto_approve_for_testing=Non
             log_decision(
                 agent="exception_investigator", transaction_id=state["exception"]["transaction_id"],
                 decision=state["investigation_status"],
-                reasoning=f"Root cause: {state['root_cause']}. {state['proposed_action']}",
+                reasoning=(f"Root cause: {state['root_cause']}. {state['proposed_action']}"
+                           + (f" AI hypothesis: {state['ai_hypothesis']}" if state.get("ai_hypothesis") else "")),
                 run_id=run_id,
                 # TASK #406 AUDIT FIX: root_cause now stored as structured
                 # data, not just embedded in free text - the report
@@ -241,7 +252,8 @@ def investigate_all(flagged_exceptions: List[dict], auto_approve_for_testing=Non
             "root_cause": state["root_cause"],
             "proposed_action": state["proposed_action"],
             "investigation_status": state["investigation_status"],
-            "provisional_cash_status": state["provisional_cash_status"]
+            "provisional_cash_status": state["provisional_cash_status"],
+            "ai_hypothesis": state.get("ai_hypothesis")
         })
 
     return results

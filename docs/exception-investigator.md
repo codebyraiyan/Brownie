@@ -87,3 +87,15 @@ When a human rejects a proposed resolution:
 
 ## Final Status Values (updated)
 `auto_resolved` | `pending_approval` | `approved` | `rejected` | `escalated_for_review` | `revised_proposal`
+
+---
+
+# AI-Judgment Addition (Task #505)
+
+Every other decision in Brownie is deterministic rule logic - matching, tolerance checks, duplicate detection - which is the correct choice whenever there's a clear, checkable answer. But "genuine_unresolved_anomaly" cases are exactly the opposite: by definition, no rule explains them.
+
+For these specific cases (and ONLY these - not every exception), the Exception Investigator calls Claude (via `agents/ai_investigator.py`) to generate a real, specific investigative hypothesis from the transaction's actual numbers, rather than a generic "requires manual investigation" placeholder.
+
+This is deliberately narrow in scope: deterministic logic still owns every case with a clear answer. AI is used only where genuine judgment is needed and rules run out - which is the point, not an afterthought.
+
+Requires `ANTHROPIC_API_KEY` to be set; degrades gracefully to a plain fallback message if not configured, so the rest of the pipeline is unaffected either way.

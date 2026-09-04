@@ -1,0 +1,57 @@
+transaction_id,exception_type,reason
+TXN10013,amount_mismatch,Bank credited amount differs from expected settlement amount by ~15.65 (short-credit)
+TXN10015,amount_mismatch,Bank credited amount differs from expected settlement amount by ~65.71 (over-credit)
+TXN10019,amount_mismatch,Bank credited amount differs from expected settlement amount by ~71.24 (over-credit)
+TXN10025,amount_mismatch,Bank credited amount differs from expected settlement amount by ~79.95 (over-credit)
+TXN10039,amount_mismatch,Bank credited amount differs from expected settlement amount by ~62.7 (over-credit)
+TXN10055,amount_mismatch,Bank credited amount differs from expected settlement amount by ~42.54 (short-credit)
+TXN10083,amount_mismatch,Bank credited amount differs from expected settlement amount by ~81.49 (short-credit)
+TXN10094,amount_mismatch,Bank credited amount differs from expected settlement amount by ~17.37 (over-credit)
+TXN10102,amount_mismatch,Bank credited amount differs from expected settlement amount by ~57.27 (over-credit)
+TXN10130,amount_mismatch,Bank credited amount differs from expected settlement amount by ~75.65 (over-credit)
+TXN10138,amount_mismatch,Bank credited amount differs from expected settlement amount by ~64.81 (short-credit)
+TXN10150,amount_mismatch,Bank credited amount differs from expected settlement amount by ~20.63 (over-credit)
+TXN10010,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10023,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10112,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10108,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10018,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10062,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10024,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10109,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10016,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10032,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10058,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10140,missing_record,Transaction exists in ledger and settlement but missing from bank statement
+TXN10158,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10157,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10057,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10012,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10035,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10075,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10145,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10037,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10031,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10074,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10040,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10072,duplicate_entry,"Same ledger_entry_id appears twice in ledger.csv - confirmed duplicate, not a repeat purchase"
+TXN10014,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10048,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10071,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10082,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10088,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10092,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10105,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10127,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10131,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10135,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10142,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10154,date_mismatch,Bank credit date is more than 2 days after settlement date
+TXN10161,refund_chargeback,"Ledger status is 'refunded' (full) - bank credit legitimately differs from settlement amount, not a data error"
+TXN10162,refund_chargeback,"Ledger status is 'refunded' (partial) - bank credit legitimately differs from settlement amount, not a data error"
+TXN10163,refund_chargeback,"Ledger status is 'refunded' (partial) - bank credit legitimately differs from settlement amount, not a data error"
+TXN10164,refund_chargeback,"Ledger status is 'refunded' (full) - bank credit legitimately differs from settlement amount, not a data error"
+TXN10165,refund_chargeback,"Ledger status is 'refunded' (partial) - bank credit legitimately differs from settlement amount, not a data error"
+TXN10166,refund_chargeback,"Ledger status is 'refunded' (partial) - bank credit legitimately differs from settlement amount, not a data error"
+TXN10167,refund_chargeback,"Ledger status is 'refunded' (partial) - bank credit legitimately differs from settlement amount, not a data error"
+TXN10168,refund_chargeback,"Ledger status is 'refunded' (partial) - bank credit legitimately differs from settlement amount, not a data error"

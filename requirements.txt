@@ -1,0 +1,8 @@
+# requirements.txt
+#
+# Install these with: pip3 install -r requirements.txt --break-system-packages
+# (On some systems, drop --break-system-packages if you get an error about it)
+
+langgraph>=0.2.0
+langchain-core>=0.3.0
+pandas>=2.0.0

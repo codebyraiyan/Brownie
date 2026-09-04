@@ -1,0 +1,16 @@
+# Generated synthetic data - regenerate via: python3 inject_mismatches.py
+data/*.csv
+
+# Generated run reports - regenerate via: python3 run_e2e.py / generate_exception_report.py
+reports/*.jsonl
+reports/*.json
+reports/exception_report.md
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store

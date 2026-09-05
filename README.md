@@ -70,7 +70,7 @@ python3 inject_mismatches.py
 
 ## Architecture
 
-See `docs/architecture-diagram.png` for the full visual, and `docs/agent-protocol.md` for the exact message format every agent uses to talk to the others.
+See `docs/architecture-diagram.jpg` for the full visual, and `docs/agent-protocol.md` for the exact message format every agent uses to talk to the others.
 
 ```
 Brownie (capability registry: finance.reconcile)

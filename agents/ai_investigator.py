@@ -3,8 +3,14 @@
 # What this file does:
 # For exceptions that NO rule can explain (genuine_unresolved_anomaly -
 # not a duplicate, not a refund, not a simple fee error, not a late
-# payout), this asks Claude to generate a real investigative hypothesis
-# in plain English, based on the transaction's actual numbers.
+# payout), this asks Google's Gemini to generate a real investigative
+# hypothesis in plain English, based on the transaction's actual numbers.
+#
+# WHY GEMINI: Google's Gemini API has a genuinely free developer tier
+# (via Google AI Studio) - no credit card required, no paid trial that
+# expires. That makes it the right choice for a student project where a
+# paid API isn't an option, without resorting to unofficial/unverified
+# third-party resellers.
 #
 # WHY THIS MATTERS: everywhere else in Brownie, decisions are deterministic
 # rules (matching, tolerance checks, duplicate detection) - which is the
@@ -17,35 +23,56 @@
 # reason, this returns a clear fallback message instead of crashing the
 # pipeline. The rest of Brownie works perfectly with or without this.
 #
-# SETUP REQUIRED:
-#   pip3 install anthropic --break-system-packages
-#   export ANTHROPIC_API_KEY=your_key_here
+# SETUP REQUIRED (free, no credit card needed):
+#   1. Go to https://aistudio.google.com/apikey and create a free API key
+#   2. pip3 install google-genai python-dotenv --break-system-packages
+#   3. Either:
+#      a) Create a .env file in your project root containing:
+#         GEMINI_API_KEY=your_key_here
+#      b) OR run: export GEMINI_API_KEY=your_key_here
+#
+# IMPORTANT: if you use a .env file, make sure ".env" is listed in your
+# .gitignore - NEVER commit an API key to a public GitHub repo.
 #
 # HOW TO RUN THIS DIRECTLY (for testing):
 #   python3 agents/ai_investigator.py
 
 import os
+import warnings
 
 try:
-    import anthropic
-    _ANTHROPIC_AVAILABLE = True
+    from dotenv import load_dotenv
+    load_dotenv()  # reads .env file in the project root, if present
 except ImportError:
-    _ANTHROPIC_AVAILABLE = False
+    pass  # dotenv is optional - export GEMINI_API_KEY manually if not using .env
+
+try:
+    from google import genai
+    from google.genai import types
+    _GENAI_AVAILABLE = True
+except ImportError:
+    _GENAI_AVAILABLE = False
+
+# The SDK prints a recommendation about a different calling pattern that
+# doesn't apply to our use (we don't use function calling / tools at all) -
+# this suppresses that specific noise without hiding real errors.
+warnings.filterwarnings("ignore", message=".*automatic function calling.*")
 
 
 def generate_ai_hypothesis(exception: dict) -> str:
     """
-    Takes a flagged exception that no rule could explain, and asks Claude
+    Takes a flagged exception that no rule could explain, and asks Gemini
     for a practical, specific investigative hypothesis - not a generic
     "look into it" response.
     """
-    if not _ANTHROPIC_AVAILABLE:
-        return ("AI hypothesis unavailable: 'anthropic' package not installed. "
-                "Run: pip3 install anthropic --break-system-packages")
+    if not _GENAI_AVAILABLE:
+        return ("AI hypothesis unavailable: 'google-genai' package not installed. "
+                "Run: pip3 install google-genai --break-system-packages")
 
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        return ("AI hypothesis unavailable: ANTHROPIC_API_KEY not set. "
-                "Run: export ANTHROPIC_API_KEY=your_key_here")
+    if not os.environ.get("GEMINI_API_KEY"):
+        return ("AI hypothesis unavailable: GEMINI_API_KEY not set. "
+                "Get a free key at https://aistudio.google.com/apikey, then run: "
+                "export GEMINI_API_KEY=your_key_here")
 
     txn_id = exception.get("transaction_id", "unknown")
     expected = exception.get("expected_amount")
@@ -66,13 +93,15 @@ This discrepancy could NOT be explained by any known rule: it is not a duplicate
 In 2-3 sentences, suggest the most likely real-world explanation(s) a human investigator should check first, and what specific evidence would confirm or rule out each one. Be concrete and practical - reference the actual numbers above, not generic advice."""
 
     try:
-        client = anthropic.Anthropic()
-        response = client.messages.create(
-            model="claude-sonnet-5",
-            max_tokens=300,
-            messages=[{"role": "user", "content": prompt}]
+        client = genai.Client()  # reads GEMINI_API_KEY from environment automatically
+        response = client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                http_options=types.HttpOptions(timeout=15000)  # 15 second timeout, in milliseconds
+            )
         )
-        return response.content[0].text.strip()
+        return response.text.strip()
     except Exception as e:
         # Never let an API failure crash the pipeline - degrade gracefully.
         return f"AI hypothesis unavailable (API error: {e}). Manual investigation required."
@@ -88,9 +117,9 @@ if __name__ == "__main__":
         "date_gap_days": 1
     }
 
-    print("Testing AI hypothesis generation...")
-    print(f"Anthropic package available: {_ANTHROPIC_AVAILABLE}")
-    print(f"API key set: {bool(os.environ.get('ANTHROPIC_API_KEY'))}")
+    print("Testing AI hypothesis generation (Gemini)...")
+    print(f"google-genai package available: {_GENAI_AVAILABLE}")
+    print(f"API key set: {bool(os.environ.get('GEMINI_API_KEY'))}")
     print()
     result = generate_ai_hypothesis(sample_exception)
     print("Result:")

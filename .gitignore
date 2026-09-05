@@ -12,5 +12,8 @@ __pycache__/
 .venv/
 venv/
 
+# Environment variables / API keys - NEVER commit these
+.env
+
 # OS
 .DS_Store

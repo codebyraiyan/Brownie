@@ -10,5 +10,7 @@ pandas>=2.0.0
 # Optional - only needed for AI-generated investigation hypotheses on
 # genuinely unexplained anomalies (agents/ai_investigator.py). The
 # pipeline works fully without this; it just falls back to a plain
-# message for that one specific case.
-anthropic>=0.40.0
+# message for that one specific case. Uses Google's Gemini API, which
+# has a free developer tier (no credit card required).
+google-genai>=0.3.0
+python-dotenv>=1.0.0

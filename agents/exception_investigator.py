@@ -140,9 +140,11 @@ def escalate_direct_node(state: InvestigationState) -> InvestigationState:
     ai_hypothesis = None
 
     # This is exactly the case rules can't handle: a genuine unexplained
-    # anomaly. Ask Claude for a real investigative hypothesis instead of
+    # anomaly. Ask Gemini for a real investigative hypothesis instead of
     # just a canned "requires manual investigation" string.
     if state["root_cause"] == "genuine_unresolved_anomaly":
+        txn_id = state["exception"].get("transaction_id", "?")
+        print(f"  [AI] Requesting hypothesis for {txn_id}...")
         ai_hypothesis = generate_ai_hypothesis(state["exception"])
 
     return {**state, "investigation_status": status, "ai_hypothesis": ai_hypothesis,
